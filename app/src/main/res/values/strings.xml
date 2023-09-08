@@ -3,4 +3,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+
+    <string name="movie_db_api_key">811c67f549b55a7bb8cbe27ef9897d9c</string>
+    <string name="get_more_movies">Get More Movies…</string>
 </resources>
