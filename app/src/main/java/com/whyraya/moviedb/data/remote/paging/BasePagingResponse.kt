@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 @Keep
 data class BasePagingResponse<T>(
     @SerializedName("results") val results: T? = null,
-    @SerializedName("page") val page: Int,
-    @SerializedName("total_pages") val totalPages: Int,
-    @SerializedName("total_results") val totalResults: Int,
+    @SerializedName("page") val page: Int? = null,
+    @SerializedName("total_pages") val totalPages: Int? = null,
+    @SerializedName("total_results") val totalResults: Int? = null,
 )

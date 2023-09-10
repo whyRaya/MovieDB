@@ -6,4 +6,9 @@
 
     <string name="movie_db_api_key">811c67f549b55a7bb8cbe27ef9897d9c</string>
     <string name="get_more_movies">Get More Movies…</string>
+    <string name="app_videos">Videos</string>
+    <string name="app_overview">Overview</string>
+    <string name="app_review">Review</string>
+    <string name="app_see_more">See More</string>
+    <string name="app_see_less">See Less</string>
 </resources>
