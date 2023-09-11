@@ -15,6 +15,6 @@ fun Boolean?.orFalse(): Boolean = this ?: false
 fun Double.roundDecimal() = when {
     this <= 0 -> this
     else -> {
-        (this * 100.0).roundToInt() / 100.0
+        (this * 10.0).roundToInt() / 10.0
     }
 }

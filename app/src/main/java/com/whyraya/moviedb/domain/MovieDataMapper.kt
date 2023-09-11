@@ -13,15 +13,7 @@ import com.whyraya.moviedb.utils.formatYear
 import com.whyraya.moviedb.utils.orFalse
 import com.whyraya.moviedb.utils.orZero
 import com.whyraya.moviedb.utils.roundDecimal
-import timber.log.Timber
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.Date
-import java.util.Locale
 import javax.inject.Inject
-import kotlin.math.roundToInt
 
 class MovieDataMapper @Inject constructor() {
 
@@ -77,7 +69,7 @@ class MovieDataMapper @Inject constructor() {
             id = it.id.orEmpty(),
             iso31661 = it.iso31661.orEmpty(),
             iso6391 = it.iso6391.orEmpty(),
-            key = it.key.orEmpty().toYoutubeUrl(),
+            key = it.key.orEmpty(),
             name = it.name.orEmpty(),
             official = it.official.orFalse(),
             publishedAt = it.publishedAt.orEmpty().formatUtc(),
@@ -109,8 +101,6 @@ class MovieDataMapper @Inject constructor() {
 fun String.toImageUrl() = "https://image.tmdb.org/t/p/w342$this"
 
 fun String.toBackdropUrl() = "https://image.tmdb.org/t/p/original$this"
-
-fun String.toYoutubeUrl() = "https://www.youtube.com/watch?v=$this"
 
 fun String.toYoutubeThumbnailUrl() = "https://img.youtube.com/vi/$this/0.jpg"
 

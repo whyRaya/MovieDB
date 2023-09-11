@@ -1,12 +1,14 @@
 package com.whyraya.moviedb.ui.movies
 
 import android.media.Image
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.whyraya.moviedb.domain.MovieRepository
 import com.whyraya.moviedb.domain.model.MovieDetailDto
 import com.whyraya.moviedb.domain.model.MovieReviewDto
+import com.whyraya.moviedb.ui.navigation.MOVIE_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,19 +19,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MovieDetailViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val movieRepository: MovieRepository
 ) : ViewModel() {
+    private val movieId = savedStateHandle.get<String>(MOVIE_ID)!!.toInt()
 
     private val _uiState = MutableStateFlow(MovieDetailUiState())
     val uiState: StateFlow<MovieDetailUiState> = _uiState.asStateFlow()
 
-    val movieReview: Flow<PagingData<MovieReviewDto>> = movieRepository.getMovieReview(615656)
+    val movieReview: Flow<PagingData<MovieReviewDto>> = movieRepository.getMovieReview(movieId)
 
     init {
-        fetchMovieDetail(movieId = 615656)
+        getMovieDetail()
     }
 
-    private fun fetchMovieDetail(movieId: Int) = viewModelScope.launch {
+    fun getMovieDetail() = viewModelScope.launch {
         _uiState.value = _uiState.value.copy(loading = true, error = null)
         try {
             movieRepository.getMovieDetail(movieId).collect {
@@ -47,6 +51,7 @@ class MovieDetailViewModel @Inject constructor(
         val movieDetail: MovieDetailDto? = null,
         val images: List<Image> = listOf(),
         val loading: Boolean = false,
-        val error: Throwable? = null,
+        val error: Throwable? = null
+
     )
 }

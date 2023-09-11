@@ -39,6 +39,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -50,7 +51,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -59,18 +59,20 @@ import com.whyraya.moviedb.domain.model.MovieDetailDto
 import com.whyraya.moviedb.domain.model.MovieGenreDto
 import com.whyraya.moviedb.domain.model.MovieReviewDto
 import com.whyraya.moviedb.domain.model.MovieVideosDto
+import com.whyraya.moviedb.ui.LocalNavController
+import com.whyraya.moviedb.ui.navigation.Screen
 
 val LocalVibrantColor =
     compositionLocalOf<Animatable<Color, AnimationVector4D>> { error("No vibrant color defined") }
 val LocalMovieId = compositionLocalOf<Int> { error("No movieId defined") }
 
 @Composable
-fun MovieDetailScreen() {
-    val movieDetailViewModel = hiltViewModel<MovieDetailViewModel>()
+fun MovieDetailScreen(movieDetailViewModel: MovieDetailViewModel) {
     val uiState = movieDetailViewModel.uiState.collectAsState().value
     when {
-        uiState.loading -> LoadingColumn(stringResource(id = R.string.get_more_movies))
+        uiState.loading -> LoadingColumn(stringResource(id = R.string.app_get_movies_detail))
         uiState.error != null -> ErrorColumn(uiState.error.message.orEmpty()) {
+            movieDetailViewModel.getMovieDetail()
         }
 
         uiState.movieDetail != null -> {
@@ -90,7 +92,12 @@ fun MovieDetailScreen() {
 @Composable
 fun MovieDetail(movieDetailViewModel: MovieDetailViewModel, movieDetail: MovieDetailDto) {
     val reviewsPaging = movieDetailViewModel.movieReview.collectAsLazyPagingItems()
-    LazyColumn {
+    LazyColumn(
+        contentPadding = PaddingValues(
+            bottom = WindowInsets.navigationBars.getBottom(LocalDensity.current)
+                .toDp().dp.plus(16.dp),
+        )
+    ) {
         item {
             ConstraintLayout(
                 modifier = Modifier
@@ -117,10 +124,12 @@ fun MovieDetail(movieDetailViewModel: MovieDetailViewModel, movieDetail: MovieDe
                 MovieTitle(
                     title = movieDetail.title,
                     originalTitle = movieDetail.originalTitle,
-                    modifier = Modifier.constrainAs(title) {
-                        top.linkTo(poster.bottom, 8.dp)
-                        linkTo(startGuideline, endGuideline)
-                    }
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .constrainAs(title) {
+                            top.linkTo(poster.bottom, 8.dp)
+                            linkTo(startGuideline, endGuideline)
+                        }
                 )
                 MovieInfo(
                     movieDetail = movieDetail,
@@ -161,7 +170,10 @@ fun MovieDetail(movieDetailViewModel: MovieDetailViewModel, movieDetail: MovieDe
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 21.dp, bottom = 8.dp),
                 text = stringResource(R.string.app_review),
                 color = LocalVibrantColor.current.value,
-                style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.body1.copy(
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.SansSerif
+                ),
             )
         }
         items(reviewsPaging.itemCount) { index ->
@@ -229,6 +241,7 @@ private fun MovieTitle(title: String, originalTitle: String, modifier: Modifier)
                 letterSpacing = 3.sp,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
+                fontFamily = FontFamily.SansSerif,
             ),
         )
         if (originalTitle.isNotBlank() && title != originalTitle) {
@@ -238,6 +251,7 @@ private fun MovieTitle(title: String, originalTitle: String, modifier: Modifier)
                     fontStyle = FontStyle.Italic,
                     letterSpacing = 2.sp,
                     textAlign = TextAlign.Center,
+                    fontFamily = FontFamily.SansSerif
                 ),
             )
         }
@@ -263,7 +277,10 @@ private fun MovieInfo(movieDetail: MovieDetailDto, modifier: Modifier) {
         Spacer(modifier = Modifier.size(spaceWithinItem))
         Text(
             text = movieDetail.releaseDate,
-            style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.SemiBold),
+            style = MaterialTheme.typography.subtitle1.copy(
+                fontWeight = FontWeight.SemiBold,
+                fontFamily = FontFamily.SansSerif
+            ),
         )
         Spacer(modifier = Modifier.size(spaceBetweenItem))
         Icon(
@@ -275,7 +292,10 @@ private fun MovieInfo(movieDetail: MovieDetailDto, modifier: Modifier) {
         Spacer(modifier = Modifier.size(spaceWithinItem))
         Text(
             text = "${movieDetail.runtime} min",
-            style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.SemiBold),
+            style = MaterialTheme.typography.subtitle1.copy(
+                fontWeight = FontWeight.SemiBold,
+                fontFamily = FontFamily.SansSerif
+            ),
         )
         Spacer(modifier = Modifier.size(spaceBetweenItem))
         Icon(
@@ -287,12 +307,18 @@ private fun MovieInfo(movieDetail: MovieDetailDto, modifier: Modifier) {
         Spacer(modifier = Modifier.size(spaceWithinItem))
         Text(
             text = "${movieDetail.voteAverage}/10",
-            style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.SemiBold),
+            style = MaterialTheme.typography.subtitle1.copy(
+                fontWeight = FontWeight.SemiBold,
+                fontFamily = FontFamily.SansSerif
+            ),
         )
         Spacer(modifier = Modifier.size(spaceWithinItem))
         Text(
             text = "(${movieDetail.voteCount})",
-            style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.SemiBold),
+            style = MaterialTheme.typography.subtitle1.copy(
+                fontWeight = FontWeight.SemiBold,
+                fontFamily = FontFamily.SansSerif
+            ),
         )
     }
 }
@@ -326,13 +352,16 @@ private fun MovieOverview(overview: String, modifier: Modifier) {
             modifier = Modifier.padding(bottom = 8.dp),
             text = stringResource(R.string.app_overview),
             color = LocalVibrantColor.current.value,
-            style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.body1.copy(
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.SansSerif
+            ),
         )
         Text(
             text = overview,
             style = MaterialTheme.typography.body2.copy(
                 letterSpacing = 2.sp,
-                lineHeight = 30.sp,
+                lineHeight = 25.sp,
                 fontFamily = FontFamily.SansSerif,
             )
         )
@@ -345,12 +374,16 @@ private fun MovieVideo(
     videos: List<MovieVideosDto>,
     modifier: Modifier,
 ) {
+    val navController = LocalNavController.current
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             modifier = modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
             text = stringResource(R.string.app_videos),
             color = LocalVibrantColor.current.value,
-            style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.body1.copy(
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.SansSerif
+            ),
         )
         LazyRow(
             modifier = Modifier.testTag(LocalContext.current.getString(R.string.app_videos)),
@@ -363,7 +396,9 @@ private fun MovieVideo(
                             .width(180.dp)
                             .height(118.dp)
                             .padding(end = 8.dp)
-                            .clickable { },
+                            .clickable {
+                                navController.navigate(Screen.YOUTUBE.createPath(video.key))
+                            },
                         shape = RoundedCornerShape(8.dp),
                         elevation = 8.dp,
                     ) {
@@ -400,7 +435,10 @@ private fun MovieReview(
             Spacer(modifier = Modifier.size(8.dp))
             Text(
                 text = review.author,
-                style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.SemiBold),
+                style = MaterialTheme.typography.subtitle1.copy(
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = FontFamily.SansSerif,
+                ),
             )
             Spacer(
                 Modifier
@@ -409,39 +447,52 @@ private fun MovieReview(
             )
             Text(
                 text = review.updatedAt,
-                style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.SemiBold),
+                style = MaterialTheme.typography.subtitle1.copy(
+                    fontFamily = FontFamily.SansSerif,
+                ),
             )
         }
         Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
             Icon(
                 imageVector = Icons.Default.Star,
                 contentDescription = null,
-                tint = Color.DarkGray,
+                tint = Color.Yellow,
                 modifier = Modifier.size(18.dp)
             )
             Spacer(modifier = Modifier.size(6.dp))
             Text(
                 text = "${review.rating}/10",
-                style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.SemiBold),
+                style = MaterialTheme.typography.subtitle1.copy(
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = FontFamily.SansSerif,
+                ),
             )
         }
         if (showMore) {
             Text(
                 text = review.content,
-                style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.SemiBold),
+                style = MaterialTheme.typography.body2.copy(
+                    letterSpacing = 1.sp,
+                    lineHeight = 21.sp,
+                    fontFamily = FontFamily.SansSerif,
+                ),
                 modifier = Modifier.padding(top = 8.dp)
             )
         } else {
             Text(
                 text = review.content,
-                style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.SemiBold),
+                style = MaterialTheme.typography.body2.copy(
+                    letterSpacing = 1.sp,
+                    lineHeight = 21.sp,
+                    fontFamily = FontFamily.SansSerif,
+                ),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(top = 8.dp)
             )
         }
         Text(
-            text = stringResource(if (showMore) R.string.app_see_less else R.string.app_see_more) ,
+            text = stringResource(if (showMore) R.string.app_see_less else R.string.app_see_more),
             style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.SemiBold),
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,

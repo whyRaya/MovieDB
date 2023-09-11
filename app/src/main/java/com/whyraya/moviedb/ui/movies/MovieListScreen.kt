@@ -39,6 +39,8 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.whyraya.moviedb.R
 import com.whyraya.moviedb.domain.MovieDto
+import com.whyraya.moviedb.ui.LocalNavController
+import com.whyraya.moviedb.ui.navigation.Screen
 
 private const val COLUMN_COUNT = 2
 private val GRID_SPACING = 8.dp
@@ -53,16 +55,14 @@ fun MoviesListScreen() {
 
     when (movies.loadState.refresh) {
         is LoadState.Loading -> {
-            LoadingColumn("Loading...")
+            LoadingColumn(stringResource(id = R.string.app_get_movies))
         }
-
         is LoadState.Error -> {
             val error = movies.loadState.refresh as LoadState.Error
             ErrorColumn(error.error.message.orEmpty()) {
                 movies.refresh()
             }
         }
-
         else -> {
             LazyMoviesGrid(state, movies)
         }
@@ -71,7 +71,10 @@ fun MoviesListScreen() {
 
 @Composable
 private fun LazyMoviesGrid(state: LazyGridState, moviePagingItems: LazyPagingItems<MovieDto>) {
-    val onMovieClicked: (Int) -> Unit = { }
+    val navController = LocalNavController.current
+    val onMovieClicked: (Int) -> Unit = {
+            movieId -> navController.navigate(Screen.DETAIL.createPath(movieId))
+    }
     LazyVerticalGrid(
         columns = GridCells.Fixed(COLUMN_COUNT),
         contentPadding = PaddingValues(
@@ -127,7 +130,9 @@ fun MovieContent(
                 GlideImage(
                     model = movie.posterPath,
                     contentDescription = "",
-                    modifier = Modifier.fillMaxSize().padding(bottom = 36.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = 36.dp),
                     contentScale = ContentScale.FillWidth
                 )
                 MovieInfo(movie, Modifier
@@ -176,7 +181,7 @@ private fun LazyGridScope.renderLoading(loadState: CombinedLoadStates) {
     if (loadState.append !is LoadState.Loading) return
 
     item(span = span) {
-        val title = stringResource(R.string.get_more_movies)
+        val title = stringResource(R.string.app_get_more_movies)
         LoadingRow(title = title, modifier = Modifier.padding(vertical = GRID_SPACING))
     }
 }

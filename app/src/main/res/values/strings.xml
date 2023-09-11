@@ -5,7 +5,9 @@
     <string name="title_notifications">Notifications</string>
 
     <string name="movie_db_api_key">811c67f549b55a7bb8cbe27ef9897d9c</string>
-    <string name="get_more_movies">Get More Movies…</string>
+    <string name="app_get_movies">Get Movies…</string>
+    <string name="app_get_more_movies">Get More Movies…</string>
+    <string name="app_get_movies_detail">Get Movie Detail…</string>
     <string name="app_videos">Videos</string>
     <string name="app_overview">Overview</string>
     <string name="app_review">Review</string>
