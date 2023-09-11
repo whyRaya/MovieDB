@@ -3,7 +3,6 @@ package com.whyraya.moviedb.ui.genre
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.Animatable
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector4D
 import androidx.compose.animation.core.animateDpAsState
@@ -12,16 +11,11 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.NightsStay
-import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
@@ -45,6 +39,7 @@ import com.whyraya.moviedb.ui.LocalDarkTheme
 import com.whyraya.moviedb.ui.LocalNavController
 import com.whyraya.moviedb.ui.movies.ErrorColumn
 import com.whyraya.moviedb.ui.movies.LoadingColumn
+import com.whyraya.moviedb.ui.movies.MovieAppBar
 import com.whyraya.moviedb.ui.navigation.Screen
 
 val LocalVibrantColor =
@@ -146,32 +141,6 @@ private fun GenreList(genres: List<MovieGenreDto>) {
 
                 )
             }
-        }
-    }
-}
-
-@Composable
-fun MovieAppBar() {
-    val colors = MaterialTheme.colors
-    val isDarkTheme = LocalDarkTheme.current
-    val iconTint =
-        animateColorAsState(
-            if (isDarkTheme.value) colors.onSurface else colors.primary,
-            label = "appIconTint"
-        ).value
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .height(50.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        Spacer(modifier = Modifier.size(8.dp))
-        Text(text = stringResource(id = R.string.app_name))
-        val icon = if (isDarkTheme.value) Icons.Default.NightsStay else Icons.Default.WbSunny
-        IconButton(onClick = { isDarkTheme.value = !isDarkTheme.value }) {
-            val desc = if (isDarkTheme.value) R.string.app_light_theme else R.string.app_dark_theme
-            Icon(icon, contentDescription = stringResource(id = desc), tint = iconTint)
         }
     }
 }

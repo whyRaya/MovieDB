@@ -42,7 +42,6 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.whyraya.moviedb.R
 import com.whyraya.moviedb.domain.MovieDto
 import com.whyraya.moviedb.ui.LocalNavController
-import com.whyraya.moviedb.ui.genre.MovieAppBar
 import com.whyraya.moviedb.ui.navigation.Screen
 
 private const val COLUMN_COUNT = 2

@@ -1,21 +1,29 @@
 package com.whyraya.moviedb.ui.movies
 
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.NightsStay
+import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -27,9 +35,13 @@ import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.whyraya.moviedb.R
+import com.whyraya.moviedb.ui.LocalDarkTheme
+import com.whyraya.moviedb.ui.LocalNavController
 
 class BottomArcShape(private val arcHeight: Float) : Shape {
     override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
@@ -54,7 +66,7 @@ class BottomArcShape(private val arcHeight: Float) : Shape {
 @Composable
 fun LoadingColumn(title: String, modifier: Modifier = Modifier) {
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize().background(MaterialTheme.colors.surface),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -72,6 +84,7 @@ fun LoadingRow(title: String, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .background(MaterialTheme.colors.surface)
             .padding(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically,
@@ -84,7 +97,7 @@ fun LoadingRow(title: String, modifier: Modifier = Modifier) {
 @Composable
 fun ErrorColumn(message: String, modifier: Modifier = Modifier, reload: () -> Unit) {
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize().background(MaterialTheme.colors.surface),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -109,6 +122,7 @@ fun ErrorRow(title: String, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .background(MaterialTheme.colors.surface)
             .padding(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically,
@@ -119,6 +133,36 @@ fun ErrorRow(title: String, modifier: Modifier = Modifier) {
             modifier = Modifier.size(40.dp),
         )
         Text(title)
+    }
+}
+
+@Composable
+fun MovieAppBar() {
+    val navController = LocalNavController.current
+    val colors = MaterialTheme.colors
+    val isDarkTheme = LocalDarkTheme.current
+    val iconTint =
+        animateColorAsState(
+            if (isDarkTheme.value) colors.onSurface else colors.primary,
+            label = "appIconTint"
+        ).value
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .height(50.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        IconButton(
+            onClick = { navController.popBackStack() }) {
+            Icon(Icons.Default.ArrowBack, contentDescription = "", tint = iconTint)
+        }
+        Text(text = stringResource(id = R.string.app_name))
+        val icon = if (isDarkTheme.value) Icons.Default.NightsStay else Icons.Default.WbSunny
+        IconButton(onClick = { isDarkTheme.value = !isDarkTheme.value }) {
+            val desc = if (isDarkTheme.value) R.string.app_light_theme else R.string.app_dark_theme
+            Icon(icon, contentDescription = stringResource(id = desc), tint = iconTint)
+        }
     }
 }
 

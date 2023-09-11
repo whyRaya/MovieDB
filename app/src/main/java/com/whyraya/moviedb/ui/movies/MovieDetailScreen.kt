@@ -1,6 +1,7 @@
 package com.whyraya.moviedb.ui.movies
 
 import androidx.compose.animation.Animatable
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector4D
 import androidx.compose.animation.core.Spring
@@ -19,9 +20,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Timer
@@ -51,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -59,6 +64,7 @@ import com.whyraya.moviedb.domain.model.MovieDetailDto
 import com.whyraya.moviedb.domain.model.MovieGenreDto
 import com.whyraya.moviedb.domain.model.MovieReviewDto
 import com.whyraya.moviedb.domain.model.MovieVideosDto
+import com.whyraya.moviedb.ui.LocalDarkTheme
 import com.whyraya.moviedb.ui.LocalNavController
 import com.whyraya.moviedb.ui.navigation.Screen
 
@@ -76,7 +82,7 @@ fun MovieDetailScreen(movieDetailViewModel: MovieDetailViewModel) {
         }
 
         uiState.movieDetail != null -> {
-            val defaultTextColor = MaterialTheme.colors.onBackground
+            val defaultTextColor = colors.onBackground
             val vibrantColor = remember { Animatable(defaultTextColor) }
             CompositionLocalProvider(
                 LocalVibrantColor provides vibrantColor,
@@ -92,6 +98,15 @@ fun MovieDetailScreen(movieDetailViewModel: MovieDetailViewModel) {
 @Composable
 fun MovieDetail(movieDetailViewModel: MovieDetailViewModel, movieDetail: MovieDetailDto) {
     val reviewsPaging = movieDetailViewModel.movieReview.collectAsLazyPagingItems()
+
+    val isDarkTheme = LocalDarkTheme.current
+    val iconTint =
+        animateColorAsState(
+            if (isDarkTheme.value) colors.onSurface else colors.primary,
+            label = "appIconTint"
+        ).value
+    val navController = LocalNavController.current
+
     LazyColumn(
         contentPadding = PaddingValues(
             bottom = WindowInsets.navigationBars.getBottom(LocalDensity.current)
@@ -99,16 +114,20 @@ fun MovieDetail(movieDetailViewModel: MovieDetailViewModel, movieDetail: MovieDe
         ),
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.surface)
+            .background(colors.surface)
     ) {
         item {
-            ConstraintLayout{
+            ConstraintLayout {
                 val (backdrop, poster, title, genres, info, overview, videos) = createRefs()
                 val startGuideline = createGuidelineFromStart(16.dp)
                 val endGuideline = createGuidelineFromEnd(16.dp)
                 MovieBackdrop(
                     backdropUrl = movieDetail.backdropPath,
                     Modifier.constrainAs(backdrop) {})
+                IconButton(
+                    onClick = { navController.popBackStack() }) {
+                    Icon(Icons.Default.ArrowBack, contentDescription = "", tint = iconTint)
+                }
                 MoviePoster(
                     movieDetail.posterPath,
                     Modifier
@@ -137,7 +156,8 @@ fun MovieDetail(movieDetailViewModel: MovieDetailViewModel, movieDetail: MovieDe
                         .constrainAs(info) {
                             top.linkTo(title.bottom, 16.dp)
                             linkTo(startGuideline, endGuideline)
-                        }
+                        },
+                    iconTint = iconTint
                 )
                 MovieGenre(
                     genres = movieDetail.genres,
@@ -165,19 +185,40 @@ fun MovieDetail(movieDetailViewModel: MovieDetailViewModel, movieDetail: MovieDe
             }
         }
         item {
-            Text(
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 21.dp, bottom = 8.dp),
-                text = stringResource(R.string.app_review),
-                color = LocalVibrantColor.current.value,
-                style = MaterialTheme.typography.body1.copy(
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.SansSerif
-                ),
-            )
+            when (reviewsPaging.loadState.refresh) {
+                is LoadState.Loading -> {
+                    LoadingColumn(stringResource(id = R.string.app_get_review))
+                }
+
+                is LoadState.Error -> {
+                    val error = reviewsPaging.loadState.refresh as LoadState.Error
+                    ErrorColumn(error.error.message.orEmpty()) {
+                        reviewsPaging.refresh()
+                    }
+                }
+
+                else -> {
+                    if (reviewsPaging.itemCount <= 0) return@item
+                    Text(
+                        modifier = Modifier.padding(
+                            start = 16.dp,
+                            end = 16.dp,
+                            top = 21.dp,
+                            bottom = 8.dp
+                        ),
+                        text = stringResource(R.string.app_review),
+                        color = LocalVibrantColor.current.value,
+                        style = MaterialTheme.typography.body1.copy(
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = FontFamily.SansSerif
+                        ),
+                    )
+                }
+            }
         }
         items(reviewsPaging.itemCount) { index ->
             val review = reviewsPaging.peek(index) ?: return@items
-            MovieReview(review)
+            MovieReview(review, iconTint)
         }
     }
 }
@@ -258,7 +299,7 @@ private fun MovieTitle(title: String, originalTitle: String, modifier: Modifier)
 }
 
 @Composable
-private fun MovieInfo(movieDetail: MovieDetailDto, modifier: Modifier) {
+private fun MovieInfo(movieDetail: MovieDetailDto, modifier: Modifier, iconTint: Color) {
     val spaceBetweenItem = 21.dp
     val spaceWithinItem = 6.dp
     val iconSize = 18.dp
@@ -270,7 +311,7 @@ private fun MovieInfo(movieDetail: MovieDetailDto, modifier: Modifier) {
         Icon(
             imageVector = Icons.Default.CalendarToday,
             contentDescription = null,
-            tint = Color.DarkGray,
+            tint = iconTint,
             modifier = Modifier.size(iconSize)
         )
         Spacer(modifier = Modifier.size(spaceWithinItem))
@@ -285,7 +326,7 @@ private fun MovieInfo(movieDetail: MovieDetailDto, modifier: Modifier) {
         Icon(
             imageVector = Icons.Default.Timer,
             contentDescription = null,
-            tint = Color.DarkGray,
+            tint = iconTint,
             modifier = Modifier.size(iconSize)
         )
         Spacer(modifier = Modifier.size(spaceWithinItem))
@@ -300,7 +341,7 @@ private fun MovieInfo(movieDetail: MovieDetailDto, modifier: Modifier) {
         Icon(
             imageVector = Icons.Default.Star,
             contentDescription = null,
-            tint = Color.DarkGray,
+            tint = iconTint,
             modifier = Modifier.size(iconSize)
         )
         Spacer(modifier = Modifier.size(spaceWithinItem))
@@ -373,6 +414,7 @@ private fun MovieVideo(
     videos: List<MovieVideosDto>,
     modifier: Modifier,
 ) {
+    if (videos.isEmpty()) return
     val navController = LocalNavController.current
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
@@ -417,7 +459,8 @@ private fun MovieVideo(
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun MovieReview(
-    review: MovieReviewDto
+    review: MovieReviewDto,
+    iconTint: Color
 ) {
     Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
         var showMore by remember { mutableStateOf(false) }
@@ -455,7 +498,7 @@ private fun MovieReview(
             Icon(
                 imageVector = Icons.Default.Star,
                 contentDescription = null,
-                tint = Color.Yellow,
+                tint = iconTint,
                 modifier = Modifier.size(18.dp)
             )
             Spacer(modifier = Modifier.size(6.dp))
