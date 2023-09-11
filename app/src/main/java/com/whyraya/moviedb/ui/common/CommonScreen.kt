@@ -1,4 +1,4 @@
-package com.whyraya.moviedb.ui.movies
+package com.whyraya.moviedb.ui.common
 
 
 import androidx.compose.animation.animateColorAsState

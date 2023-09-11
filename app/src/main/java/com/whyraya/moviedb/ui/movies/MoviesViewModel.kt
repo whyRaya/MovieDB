@@ -3,7 +3,7 @@ package com.whyraya.moviedb.ui.movies
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagingData
-import com.whyraya.moviedb.domain.MovieDto
+import com.whyraya.moviedb.domain.model.MovieDto
 import com.whyraya.moviedb.domain.MovieRepository
 import com.whyraya.moviedb.ui.navigation.GENRE_ID
 import dagger.hilt.android.lifecycle.HiltViewModel

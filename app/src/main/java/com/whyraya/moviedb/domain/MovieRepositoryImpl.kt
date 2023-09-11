@@ -3,7 +3,9 @@ package com.whyraya.moviedb.domain
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.whyraya.moviedb.data.remote.MovieRemoteDataSource
+import com.whyraya.moviedb.domain.mapper.MovieDataMapper
 import com.whyraya.moviedb.domain.model.MovieDetailDto
+import com.whyraya.moviedb.domain.model.MovieDto
 import com.whyraya.moviedb.domain.model.MovieGenreDto
 import com.whyraya.moviedb.domain.model.MovieReviewDto
 import com.whyraya.moviedb.domain.model.MovieVideosDto

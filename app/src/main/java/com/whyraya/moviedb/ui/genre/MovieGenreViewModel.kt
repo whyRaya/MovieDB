@@ -1,17 +1,10 @@
 package com.whyraya.moviedb.ui.genre
 
-import android.media.Image
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import com.whyraya.moviedb.domain.MovieDto
 import com.whyraya.moviedb.domain.MovieRepository
-import com.whyraya.moviedb.domain.model.MovieDetailDto
 import com.whyraya.moviedb.domain.model.MovieGenreDto
-import com.whyraya.moviedb.ui.movies.MovieDetailViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -40,8 +40,14 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.whyraya.moviedb.R
-import com.whyraya.moviedb.domain.MovieDto
+import com.whyraya.moviedb.domain.model.MovieDto
 import com.whyraya.moviedb.ui.LocalNavController
+import com.whyraya.moviedb.ui.common.ErrorColumn
+import com.whyraya.moviedb.ui.common.ErrorRow
+import com.whyraya.moviedb.ui.common.LoadingColumn
+import com.whyraya.moviedb.ui.common.LoadingRow
+import com.whyraya.moviedb.ui.common.MovieAppBar
+import com.whyraya.moviedb.ui.common.toDp
 import com.whyraya.moviedb.ui.navigation.Screen
 
 private const val COLUMN_COUNT = 2

@@ -37,9 +37,9 @@ import com.whyraya.moviedb.R
 import com.whyraya.moviedb.domain.model.MovieGenreDto
 import com.whyraya.moviedb.ui.LocalDarkTheme
 import com.whyraya.moviedb.ui.LocalNavController
-import com.whyraya.moviedb.ui.movies.ErrorColumn
-import com.whyraya.moviedb.ui.movies.LoadingColumn
-import com.whyraya.moviedb.ui.movies.MovieAppBar
+import com.whyraya.moviedb.ui.common.ErrorColumn
+import com.whyraya.moviedb.ui.common.LoadingColumn
+import com.whyraya.moviedb.ui.common.MovieAppBar
 import com.whyraya.moviedb.ui.navigation.Screen
 
 val LocalVibrantColor =

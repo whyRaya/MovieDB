@@ -12,11 +12,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.whyraya.moviedb.ui.genre.MovieGenreScreen
-import com.whyraya.moviedb.ui.movies.MovieDetailScreen
-import com.whyraya.moviedb.ui.movies.MovieDetailViewModel
+import com.whyraya.moviedb.ui.detail.MovieDetailScreen
+import com.whyraya.moviedb.ui.detail.MovieDetailViewModel
 import com.whyraya.moviedb.ui.movies.MoviesScreen
 import com.whyraya.moviedb.ui.movies.MoviesViewModel
-import com.whyraya.moviedb.ui.movies.VideoScreen
+import com.whyraya.moviedb.ui.videos.VideoScreen
 import com.whyraya.moviedb.ui.navigation.GENRE_ID
 import com.whyraya.moviedb.ui.navigation.MOVIES_ROUTE
 import com.whyraya.moviedb.ui.navigation.MOVIE_ID

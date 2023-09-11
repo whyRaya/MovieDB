@@ -1,4 +1,4 @@
-package com.whyraya.moviedb.ui.movies
+package com.whyraya.moviedb.ui.detail
 
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.animateColorAsState
@@ -66,6 +66,11 @@ import com.whyraya.moviedb.domain.model.MovieReviewDto
 import com.whyraya.moviedb.domain.model.MovieVideosDto
 import com.whyraya.moviedb.ui.LocalDarkTheme
 import com.whyraya.moviedb.ui.LocalNavController
+import com.whyraya.moviedb.ui.common.BottomArcShape
+import com.whyraya.moviedb.ui.common.ErrorColumn
+import com.whyraya.moviedb.ui.common.LoadingColumn
+import com.whyraya.moviedb.ui.common.dpToPx
+import com.whyraya.moviedb.ui.common.toDp
 import com.whyraya.moviedb.ui.navigation.Screen
 
 val LocalVibrantColor =

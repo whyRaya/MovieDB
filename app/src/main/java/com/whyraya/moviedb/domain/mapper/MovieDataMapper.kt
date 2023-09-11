@@ -1,4 +1,4 @@
-package com.whyraya.moviedb.domain
+package com.whyraya.moviedb.domain.mapper
 
 import com.whyraya.moviedb.data.model.MovieDetailResponse
 import com.whyraya.moviedb.data.model.MovieGenreResponse
@@ -6,6 +6,7 @@ import com.whyraya.moviedb.data.model.MovieResponse
 import com.whyraya.moviedb.data.model.MovieReviewResponse
 import com.whyraya.moviedb.data.model.MovieVideosResponse
 import com.whyraya.moviedb.domain.model.MovieDetailDto
+import com.whyraya.moviedb.domain.model.MovieDto
 import com.whyraya.moviedb.domain.model.MovieGenreDto
 import com.whyraya.moviedb.domain.model.MovieReviewDto
 import com.whyraya.moviedb.domain.model.MovieVideosDto

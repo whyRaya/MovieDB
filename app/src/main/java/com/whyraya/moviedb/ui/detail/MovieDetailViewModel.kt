@@ -1,4 +1,4 @@
-package com.whyraya.moviedb.ui.movies
+package com.whyraya.moviedb.ui.detail
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
