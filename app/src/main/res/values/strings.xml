@@ -5,6 +5,7 @@
     <string name="title_notifications">Notifications</string>
 
     <string name="movie_db_api_key">811c67f549b55a7bb8cbe27ef9897d9c</string>
+    <string name="app_loading">Loading</string>
     <string name="app_get_movies">Get Movies…</string>
     <string name="app_get_more_movies">Get More Movies…</string>
     <string name="app_get_movies_detail">Get Movie Detail…</string>
@@ -13,4 +14,8 @@
     <string name="app_review">Review</string>
     <string name="app_see_more">See More</string>
     <string name="app_see_less">See Less</string>
+    <string name="app_select_genres">Select one of the Genres</string>
+
+    <string name="app_dark_theme">Use dark theme</string>
+    <string name="app_light_theme">Use light theme</string>
 </resources>

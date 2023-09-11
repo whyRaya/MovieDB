@@ -1,6 +1,7 @@
 package com.whyraya.moviedb.data.remote
 
 import androidx.paging.PagingData
+import com.whyraya.moviedb.data.model.MovieGenreResponse
 import com.whyraya.moviedb.data.model.MovieDetailResponse
 import com.whyraya.moviedb.data.model.MovieResponse
 import com.whyraya.moviedb.data.model.MovieReviewResponse
@@ -15,8 +16,12 @@ import javax.inject.Inject
 
 class MovieRemoteDataSource @Inject constructor(private val movieServices: MovieServices) {
 
-    fun getMovies(): Flow<PagingData<MovieResponse>> = withPager { page ->
-        movieServices.getMovies(page).body()?.results.orEmpty()
+    suspend fun getMovieGenres(): MovieGenreResponse = getResponse {
+        movieServices.getMovieGenres()
+    }
+
+    fun getMovies(genreId: Int): Flow<PagingData<MovieResponse>> = withPager { page ->
+        movieServices.getMovies(genreId, page).body()?.results.orEmpty()
     }.flow
 
     suspend fun getMovieDetail(movieId: Int): MovieDetailResponse = getResponse {
@@ -30,23 +35,27 @@ class MovieRemoteDataSource @Inject constructor(private val movieServices: Movie
     fun getMovieReviews(movieId: Int): Flow<PagingData<MovieReviewResponse>> = withPager { page ->
         movieServices.getMovieReviews(movieId, page).body()?.results.orEmpty()
     }.flow
-}
 
-suspend fun <T> getResponse(
-    request: suspend () -> Response<T>
-): T = try {
-    val result = request.invoke()
-    if (result.isSuccessful) {
-        result.body() ?: throw Throwable("UNKNOWN_ERROR_MESSAGE")
-    } else {
-        throw Throwable(Throwable(result.message()))
+    private suspend fun <T> getResponse(
+        request: suspend () -> Response<T>
+    ): T = try {
+        val result = request.invoke()
+        if (result.isSuccessful) {
+            result.body() ?: throw Throwable(UNKNOWN_ERROR_MESSAGE)
+        } else {
+            throw Throwable(Throwable(result.message()))
+        }
+    } catch (error: UnknownHostException) {
+        throw error
+    } catch (error: ConnectException) {
+        throw error
+    } catch (error: HttpException) {
+        throw error
+    } catch (error: Throwable) {
+        throw error
     }
-} catch (error: UnknownHostException) {
-    throw error
-} catch (error: ConnectException) {
-    throw error
-} catch (error: HttpException) {
-    throw error
-} catch (error: Throwable) {
-    throw error
+
+    companion object {
+        private const val UNKNOWN_ERROR_MESSAGE = "UNKNOWN_ERROR_MESSAGE"
+    }
 }

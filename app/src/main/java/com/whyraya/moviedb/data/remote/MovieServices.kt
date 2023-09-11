@@ -1,5 +1,6 @@
 package com.whyraya.moviedb.data.remote
 
+import com.whyraya.moviedb.data.model.MovieGenreResponse
 import com.whyraya.moviedb.data.model.MovieDetailResponse
 import com.whyraya.moviedb.data.model.MovieResponse
 import com.whyraya.moviedb.data.model.MovieReviewResponse
@@ -12,8 +13,12 @@ import retrofit2.http.Query
 
 interface MovieServices {
 
+    @GET("genre/movie/list")
+    suspend fun getMovieGenres(): Response<MovieGenreResponse>
+
     @GET("discover/movie")
     suspend fun getMovies(
+        @Query("with_genres") genreId: Int,
         @Query("page") page: Int = 0
     ): Response<BasePagingResponse<List<MovieResponse>>>
 
@@ -32,5 +37,4 @@ interface MovieServices {
         @Path("movieId") movieId: Int,
         @Query("page") page: Int = 0
     ): Response<BasePagingResponse<List<MovieReviewResponse>>>
-
 }

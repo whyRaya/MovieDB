@@ -1,6 +1,7 @@
 package com.whyraya.moviedb.ui.movies
 
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -15,6 +16,8 @@ import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
@@ -30,7 +33,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -40,6 +42,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.whyraya.moviedb.R
 import com.whyraya.moviedb.domain.MovieDto
 import com.whyraya.moviedb.ui.LocalNavController
+import com.whyraya.moviedb.ui.genre.MovieAppBar
 import com.whyraya.moviedb.ui.navigation.Screen
 
 private const val COLUMN_COUNT = 2
@@ -47,9 +50,9 @@ private val GRID_SPACING = 8.dp
 
 private val span: (LazyGridItemSpanScope) -> GridItemSpan = { GridItemSpan(COLUMN_COUNT) }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MoviesListScreen() {
-    val moviesViewModel = hiltViewModel<MoviesViewModel>()
+fun MoviesScreen(moviesViewModel: MoviesViewModel) {
     val movies = moviesViewModel.movies.collectAsLazyPagingItems()
     val state = rememberLazyGridState()
 
@@ -64,7 +67,25 @@ fun MoviesListScreen() {
             }
         }
         else -> {
-            LazyMoviesGrid(state, movies)
+            Scaffold(
+                modifier = Modifier
+                    .statusBarsPadding()
+                    .background(MaterialTheme.colors.surface),
+                topBar = {
+                    Surface(modifier = Modifier.fillMaxWidth(), elevation = 16.dp) {
+                        Column(
+                            Modifier
+                                .background(MaterialTheme.colors.surface)
+                                .padding(bottom = 2.dp),
+                        ) {
+                            MovieAppBar()
+                        }
+                    }
+                },
+                content = {
+                    LazyMoviesGrid(state, movies)
+                }
+            )
         }
     }
 }

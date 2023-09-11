@@ -96,14 +96,13 @@ fun MovieDetail(movieDetailViewModel: MovieDetailViewModel, movieDetail: MovieDe
         contentPadding = PaddingValues(
             bottom = WindowInsets.navigationBars.getBottom(LocalDensity.current)
                 .toDp().dp.plus(16.dp),
-        )
+        ),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.surface)
     ) {
         item {
-            ConstraintLayout(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colors.surface)
-            ) {
+            ConstraintLayout{
                 val (backdrop, poster, title, genres, info, overview, videos) = createRefs()
                 val startGuideline = createGuidelineFromStart(16.dp)
                 val endGuideline = createGuidelineFromEnd(16.dp)

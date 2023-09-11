@@ -4,6 +4,7 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.whyraya.moviedb.data.remote.MovieRemoteDataSource
 import com.whyraya.moviedb.domain.model.MovieDetailDto
+import com.whyraya.moviedb.domain.model.MovieGenreDto
 import com.whyraya.moviedb.domain.model.MovieReviewDto
 import com.whyraya.moviedb.domain.model.MovieVideosDto
 import kotlinx.coroutines.Dispatchers
@@ -20,11 +21,17 @@ class MovieRepositoryImpl @Inject constructor(
     private val dataMapper: MovieDataMapper
 ) : MovieRepository {
 
-    override fun getMovie(): Flow<PagingData<MovieDto>> = remoteDataSource.getMovies().map {
-        it.map { response ->
-            dataMapper.mapMovieToDto(response)
+    override fun getMovieGenres(): Flow<List<MovieGenreDto>> = flow {
+        val response = remoteDataSource.getMovieGenres()
+        emit(dataMapper.mapToGenreDto(response))
+    }.flowOn(Dispatchers.IO)
+
+    override fun getMovie(genreId: Int): Flow<PagingData<MovieDto>> =
+        remoteDataSource.getMovies(genreId).map {
+            it.map { response ->
+                dataMapper.mapMovieToDto(response)
+            }
         }
-    }
 
     override fun getMovieDetail(movieId: Int): Flow<MovieDetailDto> = flow {
         coroutineScope {

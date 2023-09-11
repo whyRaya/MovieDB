@@ -1,6 +1,7 @@
 package com.whyraya.moviedb.domain
 
 import com.whyraya.moviedb.data.model.MovieDetailResponse
+import com.whyraya.moviedb.data.model.MovieGenreResponse
 import com.whyraya.moviedb.data.model.MovieResponse
 import com.whyraya.moviedb.data.model.MovieReviewResponse
 import com.whyraya.moviedb.data.model.MovieVideosResponse
@@ -94,6 +95,13 @@ class MovieDataMapper @Inject constructor() {
             username = authorDetails?.username.orEmpty()
         )
     } ?: MovieReviewDto()
+
+    fun mapToGenreDto(response: MovieGenreResponse?) = response?.genres.orEmpty().map {
+        MovieGenreDto(
+            id = it.id.orZero(),
+            name = it.name.orEmpty()
+        )
+    }
 }
 
 

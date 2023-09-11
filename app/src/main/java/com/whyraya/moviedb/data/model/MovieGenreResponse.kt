@@ -2,7 +2,7 @@ package com.whyraya.moviedb.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class GenreResponse(
+data class MovieGenreResponse(
     @SerializedName("genres") val genres: List<Genre>? = null
 ) {
     data class Genre(
