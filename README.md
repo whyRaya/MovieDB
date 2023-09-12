@@ -25,4 +25,4 @@ A mobile native application to show movies using API from https://api.themoviedb
 | ![Screenshot_20230911_143020](https://gitlab.com/raya.wahyu.anggara/MovieDB/uploads/89f760fe54247286ec6cbe40676d1c92/Screenshot_20230911_143020.png) | ![Screenshot_20230911_143033](https://gitlab.com/raya.wahyu.anggara/MovieDB/uploads/fc64a6d4f0d561a16f42bb4373dbd83b/Screenshot_20230911_143033.png) | ![Screenshot_20230911_143054](https://gitlab.com/raya.wahyu.anggara/MovieDB/uploads/0fbd50b7f64fc425b0bc3638c6553056/Screenshot_20230911_143054.png)|
 
 ## Screen Recording
-- [Screen Recording](https://gitlab.com/raya.wahyu.anggara/MovieDB/uploads/01a963bae436752dbbb329f01c472fae/device-2023-09-11-142754.mp4)
+[![IMG](https://img.youtube.com/vi/EH8WX1jP0sU/0.jpg)](https://youtu.be/EH8WX1jP0sU)
