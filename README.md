@@ -2,23 +2,15 @@
 
 ## Overview
 A mobile native application to show movies using API from https://api.themoviedb.org User stories:
-1. Create a screen to display the list of official genres for movies.
-2. Create a screen to list of discover movies by genre.
-3. Show the primary information about a movie when the user clicks on the movie.
-4. Show the user's review for a movie.
-5. Show the YouTube trailer of the movie.
-6. Implement endless scrolling on the list of movies and user's review.
-7. Cover positive and negative cases.
 
-Note. For point 5, if the user clicks the thumbnail, it will play the video on Webview
-
-## Technical Specs
-- Built with Jetpack Compose, Retrofit, Glide, and Hilt
+- Built with MVVM architecture, Jetpack Compose, Retrofit, Glide, and Hilt.
 - Support Dark and Light Mode, has toggle to change it dynamically
 - Screen Flow:
      - `Genre Screen` -> `Movie Screen` -> `Movie Detail Screen` -> `Movie video`
+- `Genre Screen` will fetch the genre list from the server. Click one of the genres to get a movie list based on the selected genre. 
 - `Movie Screen` has pagination to load movies based on `genreId`
-- `Movie Detail Screen` has pagination to load the user's review
+- `Movie Detail Screen` has a video list and pagination to load the user's review
+     - If the user clicks the video thumbnail, it will play the video on Webview 
 - `Movie video` uses Webview to play Youtube Url
 - Each screen has Loading, Error, and Content View to handle state changes
 
