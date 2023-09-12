@@ -1,7 +1,7 @@
 # MovieDB
 
 ## Overview
-A mobile native application to show movies using API from https://api.themoviedb.org User stories:
+A mobile native application to show movies using API from https://api.themoviedb.org
 
 - Built with MVVM architecture, Jetpack Compose, Retrofit, Glide, and Hilt.
 - Support Dark and Light Mode, has toggle to change it dynamically
